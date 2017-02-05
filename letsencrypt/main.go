@@ -16,8 +16,6 @@ import (
 //Config Object for Hosts, CertName and CaName
 type Config struct {
 	Hosts           string `env:"LE_HOSTS" envDefault:"/mnt/letsencrypt/hosts"`
-	CertName        string `env:"LE_CERT" envDefault:"cert.pem"`
-	CaName          string `env:"LE_CA" envDefault:"fullchain.pem"`
 	Email           string `env:"LE_MAIL" envDefault:"e@mail.com"`
 	ReloadContainer string `env:"LE_RP" envDefault:"nginx"`
 	WwwRoot         string `env:"LE_WWW" envDefault:"/var/www/letsencrypt/"`
@@ -56,7 +54,9 @@ func checkForNewHosts(cfg Config) {
 	var newHosts []string
 
 	for _, host := range getHosts(cfg.Hosts) {
-		if verifyCertificate(cfg.CertName, cfg.CaName, host) {
+		caPath := fmt.Sprintf("/etc/letsencrypt/live/%s/fullchain.pem", host)
+		certPath := fmt.Sprintf("/etc/letsencrypt/live/%s/privkey.pem", host)
+		if verifyCertificate(certPath, caPath, host) {
 			fmt.Printf("Certificate for %s already available.\n", host)
 		} else {
 			fmt.Printf("Adding %s to request\n", host)

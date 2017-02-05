@@ -32,8 +32,6 @@ services:
     environment: 
       - "LE_HOSTS=/mnt/letsencrypt/hosts"
       - "LE_MAIL=info@3r1.co"
-      - "LE_CA=/etc/letsencrypt/live/3r1.co/fullchain.pem"
-      - "LE_CERT=/etc/letsencrypt/live/3r1.co/cert.pem"
       - "LE_WWW=/www"
     volumes:
       - certs:/etc/nginx/certs

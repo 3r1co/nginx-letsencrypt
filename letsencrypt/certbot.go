@@ -29,8 +29,7 @@ func requestCertificate(cfg Config, host string) {
 
 	fmt.Printf("Using Certbot to generate new certificate for %s \n", host)
 
-	cmd := fmt.Sprintf("/le_wrapper.sh %s %s", cfg.Email, host)
-	command := exec.Command(cmd)
+	command := exec.Command("/le_wrapper.sh", cfg.Email, host)
 
 	printCommand(command)
 
