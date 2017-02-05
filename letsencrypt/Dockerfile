@@ -5,8 +5,9 @@ LABEL org.3r1c.maintainer="Eric Muellenbach"
 
 ADD https://dl.eff.org/certbot-auto /usr/local/bin/certbot
 
-RUN chmod +x /usr/local/bin/certbot && \
-    certbot renew --non-interactive
+RUN chmod +x /usr/local/bin/certbot 
+
+RUN certbot renew --non-interactive
 
 ADD letsencrypt-helper /letsencrypt-helper
 

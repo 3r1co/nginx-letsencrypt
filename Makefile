@@ -8,7 +8,7 @@ compile:
 		go build -o letsencrypt-helper \
 	'
 build:
-	docker build -t $(IMAGE_NAME) -f letsencrypt/Dockerfile letsencrypt/
+	docker build --no-cache -t $(IMAGE_NAME) -f letsencrypt/Dockerfile letsencrypt/
 
 push:
 	docker push $(IMAGE_NAME)
