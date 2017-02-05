@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"os/exec"
 )
@@ -33,12 +34,18 @@ func requestCertificates(cfg Config, hosts []string) {
 		args = append(args, fmt.Sprintf("-d %s", host))
 	}
 
-	if out, err := exec.Command(cmd, args...).Output(); err != nil {
-		fmt.Println(err)
+	command := exec.Command(cmd, args...)
+	var out bytes.Buffer
+	var stderr bytes.Buffer
+	command.Stdout = &out
+	command.Stderr = &stderr
+	err := command.Run()
+	if err != nil {
+		fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
 		fmt.Println("Requesting new certificates failed")
-	} else {
-		fmt.Println(string(out))
-		fmt.Println("Successfully requested new certificates")
+		return
 	}
+	fmt.Println("Result: " + out.String())
+	fmt.Println("Successfully requested new certificates")
 
 }
