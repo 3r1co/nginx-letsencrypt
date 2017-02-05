@@ -141,8 +141,7 @@ upstream {{ $upstream_name }} {
 {{/* Use the cert specified on the container or fallback to the best vhost match */}}
 {{ $cert := (coalesce $certName $vhostCert) }}
 
-{{/* $is_https := (and (ne $https_method "nohttps") (ne $cert "") (exists (printf "/etc/nginx/certs/%s.crt" $cert)) (exists (printf "/etc/nginx/certs/%s.key" $cert))) */}}
-{{ $is_https := true }}
+{{ $is_https := (and (ne $https_method "nohttps") (ne $cert "") (exists (printf "/etc/letsencrypt/live/%s/fullchain.pem" $.Env.DOMAIN)) (exists (printf "/etc/letsencrypt/live/%s/privkey.pem" $.Env.DOMAIN))) }}
 {{ if $is_https }}
 
 {{ if eq $https_method "redirect" }}
@@ -174,8 +173,8 @@ server {
 	ssl_session_cache shared:SSL:50m;
 	ssl_session_tickets off;
 
-	ssl_certificate 	/etc/letsencrypt/live/3r1.co/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/3r1.co/privkey.pem;
+	ssl_certificate 	/etc/letsencrypt/live/{{ $.Env.DOMAIN }}/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/{{ $.Env.DOMAIN }}/privkey.pem;
 
 	{{ if (exists (printf "/etc/nginx/certs/%s.dhparam.pem" $cert)) }}
 	ssl_dhparam {{ printf "/etc/nginx/certs/%s.dhparam.pem" $cert }};
