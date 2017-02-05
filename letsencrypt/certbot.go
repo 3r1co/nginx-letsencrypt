@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os/exec"
+        "strings"
 )
 
 func renewCertificates(cfg Config) {
@@ -20,6 +21,10 @@ func renewCertificates(cfg Config) {
 	}
 }
 
+func printCommand(cmd *exec.Cmd) {
+  fmt.Printf("==> Executing: %s\n", strings.Join(cmd.Args, " "))
+}
+
 func requestCertificates(cfg Config, hosts []string) {
 
 	fmt.Printf("Using Certbot to generate new certificates for %v \n", hosts)
@@ -28,13 +33,14 @@ func requestCertificates(cfg Config, hosts []string) {
 	cmd := "certbot"
 	emailArg := fmt.Sprintf("-m %s", cfg.Email)
 	wwwArg := fmt.Sprintf("-w %s", cfg.WwwRoot)
-	args := []string{"certonly", "--webroot", "--agree-tos", "--non-interactive", "--expand", wwwArg, emailArg}
+	args := []string{"certonly", "--webroot", wwwArg , "--agree-tos", "--non-interactive", "--expand", emailArg}
 
 	for _, host := range hosts {
 		args = append(args, fmt.Sprintf("-d %s", host))
 	}
 
 	command := exec.Command(cmd, args...)
+        printCommand(command)
 	var out bytes.Buffer
 	var stderr bytes.Buffer
 	command.Stdout = &out
