@@ -43,11 +43,11 @@ func readCertificate(path string) (cert *x509.Certificate, err error) {
 		if block == nil {
 			panic("failed to parse certificate PEM")
 		}
-		cert, err := x509.ParseCertificate(block.Bytes)
-		if err != nil {
-			panic("failed to parse certificate: " + err.Error())
+		if cert, err := x509.ParseCertificate(block.Bytes); err == nil {
+			return nil, errors.New("CERT_NOT_EXIST")
+		} else {
+			return cert, nil
 		}
-		return cert, nil
 	}
 	fmt.Println("Certificate file does not exist!")
 	return nil, errors.New("CERT_NOT_EXIST")
