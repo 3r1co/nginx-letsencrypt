@@ -1,0 +1,54 @@
+version: '2'
+
+services:
+  nginx:
+    image: nginx
+    container_name: nginx
+    networks:
+      - rp
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - conf_nginx:/etc/nginx/conf.d:ro
+      - certs:/etc/nginx/certs:ro
+      - www_letsencrypt:/var/www/letsencrypt/:ro
+      - etc_letsencrypt:/etc/letsencrypt:ro
+  docker-gen:
+    image: jwilder/docker-gen
+    command: -config /docker-gen.cfg
+    networks:
+      - rp
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./conf/docker-gen.cfg:/docker-gen.cfg:ro
+      - ./templates:/etc/templates/:ro
+      - certs:/etc/nginx/certs:ro
+      - conf_nginx:/etc/nginx/conf.d
+      - conf_letsencrypt:/mnt/letsencrypt
+  letsencrypt-helper:
+    image: r.3r1.co/letsencrypt-helper
+    container_name: letsencrypt
+    environment: 
+      - "LE_HOSTS=/mnt/letsencrypt/hosts"
+      - "LE_MAIL=info@3r1.co"
+      - "LE_CA=/etc/letsencrypt/live/3r1.co/fullchain.pem"
+      - "LE_CERT=/etc/letsencrypt/live/3r1.co/cert.pem"
+    volumes:
+      - certs:/etc/nginx/certs
+      - etc_letsencrypt:/etc/letsencrypt
+      - www_letsencrypt:/var/www/letsencrypt/
+      - conf_letsencrypt:/mnt/letsencrypt:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+volumes:
+  conf_nginx:
+  etc_letsencrypt:
+  conf_letsencrypt:
+  www_letsencrypt:
+  certs:
+
+networks:
+  rp:
+    external:
+      name: rp
