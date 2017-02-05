@@ -34,11 +34,11 @@ services:
       - "LE_MAIL=info@3r1.co"
       - "LE_CA=/etc/letsencrypt/live/3r1.co/fullchain.pem"
       - "LE_CERT=/etc/letsencrypt/live/3r1.co/cert.pem"
-      - "LE_WWW=/letsencrypt/"
+      - "LE_WWW=/www"
     volumes:
       - certs:/etc/nginx/certs
       - etc_letsencrypt:/etc/letsencrypt
-      - www_letsencrypt:/letsencrypt
+      - www_letsencrypt:/www
       - conf_letsencrypt:/mnt/letsencrypt:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
 

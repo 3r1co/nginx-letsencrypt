@@ -1,5 +1,4 @@
 FROM python:2.7
-#FROM quay.io/letsencrypt/letsencrypt:latest
 
 LABEL org.3r1c.maintainer="Eric Muellenbach"
 
@@ -10,5 +9,8 @@ RUN chmod +x /usr/local/bin/certbot
 RUN certbot renew --non-interactive
 
 ADD letsencrypt-helper /letsencrypt-helper
+ADD le_wrapper.sh /le_wrapper.sh
+
+RUN chmod +x /le_wrapper.sh
 
 CMD ["/letsencrypt-helper"]

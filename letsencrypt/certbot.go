@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os/exec"
-        "strings"
+	"strings"
 )
 
 func renewCertificates(cfg Config) {
@@ -22,25 +22,18 @@ func renewCertificates(cfg Config) {
 }
 
 func printCommand(cmd *exec.Cmd) {
-  fmt.Printf("==> Executing: %s\n", strings.Join(cmd.Args, " "))
+	fmt.Printf("==> Executing: %s\n", strings.Join(cmd.Args, " "))
 }
 
-func requestCertificates(cfg Config, hosts []string) {
+func requestCertificate(cfg Config, host string) {
 
-	fmt.Printf("Using Certbot to generate new certificates for %v \n", hosts)
+	fmt.Printf("Using Certbot to generate new certificate for %s \n", host)
 
-	//certonly --webroot -w /var/www/example/ --agree-tos -n -m a@b.com --expand -d a.domain.co
-	cmd := "certbot"
-	emailArg := fmt.Sprintf("-m %s", cfg.Email)
-	wwwArg := fmt.Sprintf("-w %s", cfg.WwwRoot)
-	args := []string{"certonly", "--webroot", wwwArg , "--agree-tos", "--non-interactive", "--expand", emailArg}
+	cmd := fmt.Sprintf("/le_wrapper.sh %s %s", cfg.Email, host)
+	command := exec.Command(cmd)
 
-	for _, host := range hosts {
-		args = append(args, fmt.Sprintf("-d %s", host))
-	}
+	printCommand(command)
 
-	command := exec.Command(cmd, args...)
-        printCommand(command)
 	var out bytes.Buffer
 	var stderr bytes.Buffer
 	command.Stdout = &out

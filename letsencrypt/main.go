@@ -61,12 +61,13 @@ func checkForNewHosts(cfg Config) {
 		} else {
 			fmt.Printf("Adding %s to request\n", host)
 			newHosts = append(newHosts, host)
+			requestCertificate(cfg, host)
+			reloadNginx(cfg.ReloadContainer)
 		}
 	}
 
 	if len(newHosts) > 0 {
-		requestCertificates(cfg, newHosts)
-		reloadNginx(cfg.ReloadContainer)
+		fmt.Printf("Requested new certificates for %v", newHosts)
 	} else {
 		fmt.Println("No new hosts to add.")
 	}
