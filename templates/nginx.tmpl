@@ -140,8 +140,8 @@ upstream {{ $upstream_name }} {
 
 {{/* Use the cert specified on the container or fallback to the best vhost match */}}
 {{ $cert := (coalesce $certName $vhostCert) }}
-
-{{ $is_https := (and (ne $https_method "nohttps") (ne $cert "") (exists (printf "/etc/letsencrypt/live/%s/fullchain.pem" $.Env.DOMAIN)) (exists (printf "/etc/letsencrypt/live/%s/privkey.pem" $.Env.DOMAIN))) }}
+#Certificate: {{ $cert }}
+{{ $is_https := (and (ne $https_method "nohttps") (ne $cert "") (exists (printf "/etc/letsencrypt/live/%s/fullchain.pem" $cert )) (exists (printf "/etc/letsencrypt/live/%s/privkey.pem" $cert )) }}
 {{ if $is_https }}
 
 {{ if eq $https_method "redirect" }}

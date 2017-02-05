@@ -20,7 +20,7 @@ type Config struct {
 	CaName          string `env:"LE_CA" envDefault:"fullchain.pem"`
 	Email           string `env:"LE_MAIL" envDefault:"e@mail.com"`
 	ReloadContainer string `env:"LE_RP" envDefault:"nginx"`
-	WwwRoot         string `env:"LE_WWW" envDefault:"/var/www/letsencrypt"`
+	WwwRoot         string `env:"LE_WWW" envDefault:"/var/www/letsencrypt/"`
 }
 
 func main() {
