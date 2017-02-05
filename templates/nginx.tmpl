@@ -150,7 +150,7 @@ server {
 	listen 80 {{ $default_server }};
 	access_log /var/log/nginx/access.log vhost;
 
-	location /.well-known/acme-challenge {
+	location /.well-known/acme-challenge/ {
 		root  /var/www/letsencrypt;
 	}
 
@@ -223,6 +223,10 @@ server {
 	{{ else if (exists "/etc/nginx/vhost.d/default") }}
 	include /etc/nginx/vhost.d/default;
 	{{ end }}
+
+	location /.well-known/acme-challenge/ {
+		root  /var/www/letsencrypt;
+	}
 
 	location / {
 		{{ if eq $proto "uwsgi" }}
