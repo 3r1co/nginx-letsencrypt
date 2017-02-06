@@ -43,6 +43,7 @@ func readCertificate(path string) (cert *x509.Certificate, err error) {
 		if block == nil {
 			panic("failed to parse certificate PEM")
 		}
+
 		if cert, err := x509.ParseCertificate(block.Bytes); err == nil {
 			return nil, errors.New("CERT_NOT_EXIST")
 		} else {

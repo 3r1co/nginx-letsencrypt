@@ -29,7 +29,23 @@ func requestCertificate(cfg Config, host string) {
 
 	fmt.Printf("Using Certbot to generate new certificate for %s \n", host)
 
-	command := exec.Command("/le_wrapper.sh", cfg.Email, host)
+	//certonly --webroot -w /var/www/example/ --agree-tos -n -m a@b.com --expand -d a.domain.com
+
+	cmd := "certbot"
+	//wwwArg := fmt.Sprintf("-w %s", cfg.WwwRoot)
+	emailArg := fmt.Sprintf("-m %s", cfg.Email)
+	domainArg := fmt.Sprintf("-d %s", host)
+	args := []string{"certonly", "--verbose",
+		"--debug", "--webroot", "--expand", "-w", "/www",
+		"--agree-tos", "--non-interactive",
+		emailArg, domainArg}
+	args = append(args)
+
+	/*
+		cmd := "ls"
+		args := []string{"-ltra", "/letsencrypt"}
+	*/
+	command := exec.Command(cmd, args...)
 
 	printCommand(command)
 
